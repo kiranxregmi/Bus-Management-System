@@ -46,19 +46,26 @@
                         <h3>Manage Buses</h3>
                         <p>Add, edit, or remove buses</p>
                     </a>
-                    <a href="${pageContext.request.contextPath}/admin/bus?action=viewBookings" class="stat-card"
-                        style="text-decoration: none;">
+                    <a href="${pageContext.request.contextPath}/admin/schedule?action=list" class="stat-card" style="text-decoration: none;">
+                        <h3>Manage Schedules</h3>
+                        <p>Assign buses to routes and times</p>
+                    </a>
+                    <a href="${pageContext.request.contextPath}/admin/route?action=list" class="stat-card" style="text-decoration: none;">
+                        <h3>Manage Routes</h3>
+                        <p>Define city pairs and distances</p>
+                    </a>
+                    <a href="${pageContext.request.contextPath}/admin/trip-sheet" class="stat-card" style="text-decoration: none;">
+                        <h3>Daily Trip Sheet</h3>
+                        <p>Track live bus operations</p>
+                    </a>
+                    <a href="${pageContext.request.contextPath}/admin/bus?action=viewBookings" class="stat-card" style="text-decoration: none;">
                         <h3>View All Bookings</h3>
                         <p>See all customer bookings</p>
                     </a>
-                    <a href="addBus.jsp" class="stat-card" style="text-decoration: none;">
-                        <h3>Add New Bus</h3>
-                        <p>Register a new bus to the fleet</p>
+                    <a href="${pageContext.request.contextPath}/admin/reports" class="stat-card" style="text-decoration: none;">
+                        <h3>System Reports</h3>
+                        <p>Business analytics and revenue</p>
                     </a>
-                    <div class="stat-card">
-                        <h3>Reports</h3>
-                        <p>Generate system reports</p>
-                    </div>
                 </div>
 
                 <div style="background: var(--white); padding: 1.5rem; border-radius: 10px;">

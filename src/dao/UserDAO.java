@@ -91,6 +91,21 @@ public class UserDAO {
         return 0;
     }
 
+    // Get users by role (for staff assignment)
+    public java.util.List<User> getUsersByRole(String role) throws SQLException {
+        java.util.List<User> users = new java.util.ArrayList<>();
+        String sql = "SELECT * FROM users WHERE role = ? ORDER BY full_name";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, role);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                users.add(extractUserFromResultSet(rs));
+            }
+        }
+        return users;
+    }
+
     // Helper method
     private User extractUserFromResultSet(ResultSet rs) throws SQLException {
         User user = new User();

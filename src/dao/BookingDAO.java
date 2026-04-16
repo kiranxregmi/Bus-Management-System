@@ -107,6 +107,24 @@ public class BookingDAO {
         return 0;
     }
 
+    // Get total passengers booked for a schedule
+    public int getPassengerCountBySchedule(int scheduleId) throws SQLException {
+        String sql = "SELECT seat_numbers FROM bookings WHERE schedule_id = ? AND status = 'CONFIRMED'";
+        int total = 0;
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, scheduleId);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                String seats = rs.getString("seat_numbers");
+                if (seats != null && !seats.isEmpty()) {
+                    total += seats.split(",").length;
+                }
+            }
+        }
+        return total;
+    }
+
     // Cancel booking
     public boolean cancelBooking(int bookingId) throws SQLException {
         String sql = "UPDATE bookings SET status='CANCELLED' WHERE id=?";

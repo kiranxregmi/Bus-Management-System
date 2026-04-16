@@ -64,6 +64,10 @@ public class UserService {
         return userDAO.getUserCount();
     }
 
+    public List<User> getUsersByRole(String role) throws SQLException {
+        return userDAO.getUsersByRole(role);
+    }
+
     private List<String> validateUser(User user) {
         List<String> errors = new ArrayList<>();
 

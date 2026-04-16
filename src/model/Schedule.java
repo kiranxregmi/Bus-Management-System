@@ -11,6 +11,12 @@ public class Schedule {
     private Time arrivalTime;
     private Date travelDate;
     private int availableSeats;
+    private Time actualDeparture;
+    private Time actualArrival;
+    private Integer driverId;
+    private Integer conductorId;
+    private String status;
+    private double fare;
 
     // For JOIN queries
     private Bus bus;
@@ -93,8 +99,56 @@ public class Schedule {
         this.route = route;
     }
 
+    public Time getActualDeparture() {
+        return actualDeparture;
+    }
+
+    public void setActualDeparture(Time actualDeparture) {
+        this.actualDeparture = actualDeparture;
+    }
+
+    public Time getActualArrival() {
+        return actualArrival;
+    }
+
+    public void setActualArrival(Time actualArrival) {
+        this.actualArrival = actualArrival;
+    }
+
+    public Integer getDriverId() {
+        return driverId;
+    }
+
+    public void setDriverId(Integer driverId) {
+        this.driverId = driverId;
+    }
+
+    public Integer getConductorId() {
+        return conductorId;
+    }
+
+    public void setConductorId(Integer conductorId) {
+        this.conductorId = conductorId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public double getFare() {
+        return fare;
+    }
+
+    public void setFare(double fare) {
+        this.fare = fare;
+    }
+
     @Override
     public String toString() {
-        return "Schedule [id=" + id + ", busId=" + busId + ", routeId=" + routeId + "]";
+        return "Schedule [id=" + id + ", busId=" + busId + ", routeId=" + routeId + ", status=" + status + "]";
     }
 }

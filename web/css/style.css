@@ -155,6 +155,7 @@ a {
     padding: 6rem 1.5rem 4rem;
     text-align: center;
     overflow: hidden;
+    color: white;
     /* Scenic mountain-road gradient — swap for a real image via url() */
     background:
         linear-gradient(
@@ -173,28 +174,6 @@ a {
         );
     background-size: cover;
     background-position: center;
-}
-
-/* Subtle moving pseudo-layer for depth */
-.hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-        radial-gradient(ellipse 80% 60% at 50% 110%, rgba(232,93,4,0.18) 0%, transparent 70%),
-        radial-gradient(ellipse 60% 40% at 20% 0%, rgba(255,255,255,0.06) 0%, transparent 60%);
-    pointer-events: none;
-}
-
-/* Road/horizon decorative stripe */
-.hero::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 6px;
-    background: linear-gradient(90deg, #e85d04 0%, #ffba08 50%, #e85d04 100%);
 }
 
 .hero-content {
@@ -240,32 +219,25 @@ a {
 .hero-subtitle {
     font-size: clamp(1rem, 2.2vw, 1.2rem);
     color: rgba(255, 255, 255, 0.88);
-    max-width: 540px;
-    margin: 0 auto 2.5rem;
-    line-height: 1.7;
-    animation: fadeInUp 0.7s cubic-bezier(.22,.68,0,1.2) both;
-    animation-delay: 0.75s;
-    opacity: 0;
+    font-size: 1.35rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 2rem;
 }
 
 /* ===== GLASSMORPHISM SEARCH CARD ===== */
 .hero-search-card {
+    background: rgba(240, 242, 245, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    width: 98%;
+    max-width: 1400px;
+    margin: 0 auto;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.3);
     position: relative;
-    z-index: 2;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    border-radius: 20px;
-    padding: 2rem 2rem 1.6rem;
-    max-width: 860px;
-    width: 100%;
-    box-shadow:
-        0 8px 32px rgba(26, 62, 111, 0.22),
-        0 1.5px 0 rgba(255,255,255,0.7) inset;
-    animation: slideUpCard 0.75s cubic-bezier(.22,.68,0,1.2) both;
-    animation-delay: 0.3s;
-    opacity: 0;
+    z-index: 10;
+    animation: fadeInUp 0.8s ease-out both;
 }
 
 .search-card-label {
@@ -281,16 +253,27 @@ a {
 
 .search-form {
     display: flex;
-    flex-wrap: nowrap;
-    align-items: flex-end;
+    flex-wrap: nowrap !important;
+    align-items: center;
     gap: 0.75rem;
+    width: 100%;
+}
+
+.search-form-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    width: 100%;
 }
 
 .search-field {
     display: flex;
     flex-direction: column;
-    flex: 1 1 0;
-    min-width: 0;
+    width: 100%;
+}
+
+.date-field-group {
+    width: 100%;
 }
 
 .search-form select,
@@ -315,58 +298,148 @@ a {
     box-shadow: 0 0 0 3px rgba(26, 62, 111, 0.13);
 }
 
-/* Swap button between From/To */
-.swap-wrapper {
+/* STRICT HORIZONTAL ROW */
+.search-form-perfect-row {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important; /* CRITICAL: NO WRAPPING */
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+}
+
+.field-pill {
+    background: #fff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    padding: 0 0.6rem;
+    flex: 0.7; /* Decreased width */
+    height: 52px;
+    min-width: 120px;
+}
+
+.pill-icon {
+    display: flex;
+    align-items: center;
+    margin-right: 8px;
+}
+
+.search-form-perfect-row select {
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    font-size: 1.15rem !important; /* Increased +4px approx */
+    color: #555 !important;
+    font-style: italic;
+    width: 100%;
+    cursor: pointer;
+    outline: none !important;
+}
+
+.swap-pill-btn {
+    background: #e1e4e8;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: #555;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.date-pill {
+    flex: 0.5; /* Decreased width */
+}
+
+.date-pill input[type="date"] {
+    background: #fff;
+    border-radius: 8px;
+    border: none;
+    height: 52px;
+    padding: 0 0.6rem;
+    font-size: 1.15rem; /* Increased +4px */
+    color: #333;
+    width: 100%;
+}
+
+.shortcuts-group-pill {
+    display: flex;
+    gap: 0.35rem;
+    flex-shrink: 0;
+}
+
+.s-btn-pill {
+    background: #f0f2f5;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 44px;
+    height: 56px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-end;
-    padding-bottom: 0.15rem;
-    flex-shrink: 0;
-}
-
-.swap-btn {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    border: 2px solid var(--primary);
-    background: #fff;
-    color: var(--primary);
-    font-size: 1.1rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
     justify-content: center;
-    transition: background 0.2s, color 0.2s, transform 0.3s;
-    flex-shrink: 0;
+    cursor: pointer;
+    transition: all 0.2s;
 }
 
-.swap-btn:hover {
-    background: var(--primary);
+.s-btn-pill .n {
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.s-btn-pill .d {
+    font-size: 0.65rem;
+    margin-top: 2px;
+}
+
+.s-btn-pill.active {
+    background: #00adef; 
     color: #fff;
-    transform: rotate(180deg);
+    border-color: #00adef;
+}
+
+.search-pill-btn {
+    background: #0055a5; 
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    height: 52px;
+    padding: 0 1.25rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.2s;
+}
+
+.search-pill-btn:hover {
+    background: #00448a;
 }
 
 /* Search / Submit button */
-.search-submit-wrapper {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    flex-shrink: 0;
+.search-submit-wrapper-vertical {
+    width: 100%;
+    margin-top: 0.5rem;
 }
 
 .search-btn {
+    width: 100%;
     background: #e85d04;
     color: #fff;
     border: none;
-    padding: 0.82rem 2rem;
+    padding: 1rem 2rem;
     border-radius: 10px;
     cursor: pointer;
     font-weight: 700;
-    font-size: 1rem;
+    font-size: 1.1rem;
     letter-spacing: 0.02em;
-    white-space: nowrap;
-    transition: background 0.25s, box-shadow 0.25s, transform 0.15s;
+    transition: all 0.25s;
     box-shadow: 0 4px 16px rgba(232, 93, 4, 0.32);
 }
 
@@ -379,6 +452,114 @@ a {
 .search-btn:active {
     transform: translateY(0);
     box-shadow: 0 2px 8px rgba(232, 93, 4, 0.3);
+}
+
+/* Date Button Styles */
+/* Strict Vertical Date Shortcuts */
+.date-shortcuts-vertical-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-top: 0.8rem;
+    width: 100%;
+}
+
+.shortcut-btn-vertical {
+    background: rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(26, 62, 111, 0.1);
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s;
+    color: var(--primary);
+}
+
+.shortcut-btn-vertical strong {
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.shortcut-date {
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+
+.shortcut-btn-vertical:hover {
+    background: rgba(255, 255, 255, 0.5);
+    transform: translateX(5px);
+}
+
+.shortcut-btn-vertical.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+    box-shadow: 0 4px 12px rgba(26, 62, 111, 0.2);
+}
+
+.shortcut-btn-vertical.active .shortcut-date {
+    opacity: 0.9;
+}
+
+.date-buttons-wrapper {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-start;
+    padding: 0.6rem 0 0;
+    width: 100%;
+}
+
+.date-btn {
+    background: #f8f9fa;
+    color: var(--dark);
+    border: 2px solid #d0d0d0;
+    padding: 0;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 58px;
+    height: 52px;
+    flex-shrink: 0;
+    transition: all 0.25s ease;
+    font-weight: 600;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.date-btn:hover {
+    border-color: var(--primary);
+    background: #e8f0f8;
+    color: var(--dark);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(26, 62, 111, 0.15);
+}
+
+.date-btn.active {
+    background: #87ceeb;
+    color: #fff;
+    border-color: #4fb7d9;
+    box-shadow: 0 4px 12px rgba(135, 206, 235, 0.4);
+}
+
+.date-btn .date-num {
+    font-size: 1.2rem;
+    font-weight: 800;
+    line-height: 1;
+    margin: 0;
+    padding: 0;
+}
+
+.date-btn .date-day {
+    font-size: 0.6rem;
+    font-weight: 700;
+    opacity: 0.8;
+    margin-top: 0.15rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
 }
 
 /* ===== TRUST BADGES ===== */
@@ -876,24 +1057,17 @@ footer {
     }
 
     .search-form {
-        flex-direction: column;
+        flex-direction: row; /* REMAIN ROW LONGER */
+        flex-wrap: wrap; 
     }
 
     .search-field,
-    .swap-wrapper,
-    .search-submit-wrapper {
-        width: 100%;
+    .field-pill,
+    .date-pill {
+        width: auto;
+        min-width: 140px;
     }
-
-    .swap-btn {
-        width: 100%;
-        border-radius: 8px;
-        height: 36px;
-    }
-
-    .search-btn {
-        width: 100%;
-    }
+}
 
     .trust-badges {
         gap: 1rem;
