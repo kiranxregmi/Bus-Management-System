@@ -18,7 +18,7 @@
             <body>
                 <nav class="navbar">
                     <a href="${pageContext.request.contextPath}/index.jsp" class="logo">
-                        <span class="logo-icon">🚌</span> Kalpana Travels
+                        <span class="logo-icon">..</span> Kalpana Travels
                     </a>
                     <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">☰</button>
                     <ul class="nav-links">
