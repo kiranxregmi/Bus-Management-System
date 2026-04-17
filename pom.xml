@@ -81,9 +81,11 @@
                     <httpConnector>
                         <port>8081</port>
                     </httpConnector>
-                    <webAppSourceDirectory>${project.basedir}/web</webAppSourceDirectory>
                     <webApp>
                         <contextPath>/</contextPath>
+                        <resourceBases>
+                            <resourceBase>${project.basedir}/web</resourceBase>
+                        </resourceBases>
                     </webApp>
                 </configuration>
             </plugin>

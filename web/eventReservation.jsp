@@ -7,7 +7,7 @@
     }
     
     HttpSession session2 = request.getSession(false);
-    boolean isLoggedIn = session2 != null && session2.getAttribute("userId") != null;
+    boolean isLoggedIn = session2 != null && session2.getAttribute("user") != null;
 %>
 <!DOCTYPE html>
 <html>

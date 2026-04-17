@@ -66,6 +66,10 @@
                         <h3>System Reports</h3>
                         <p>Business analytics and revenue</p>
                     </a>
+                    <a href="${pageContext.request.contextPath}/admin/rentals" class="stat-card" style="text-decoration: none; border: 2px solid var(--secondary);">
+                        <h3 style="color: var(--secondary);">Manage Event Rentals</h3>
+                        <p>Approve wedding and group bookings</p>
+                    </a>
                 </div>
 
                 <div style="background: var(--white); padding: 1.5rem; border-radius: 10px;">
