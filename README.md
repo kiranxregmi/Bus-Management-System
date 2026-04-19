@@ -255,3 +255,100 @@ BusManagementSystem/
         └── mysql-connector-java-8.x.x.jar  ➤ MySQL JDBC Driver
                                             ➤ Required for database connectivity
                                             ➤ Download from MySQL official website
+
+
+Admin Dashboard Redesign + Bus Number Feature
+Overview
+Redesign the entire admin dashboard to match the Figma UI (dark navy sidebar, yellow/orange accents, clean white content area, Kalpana Travels branding) and add a new "Bus Number" section between Bus and Route in the sidebar. The existing buses table will be split conceptually:
+
+Bus → stores bus_name + bus_type only (the "brand" like "Syangja Gandaki")
+Bus Number → stores individual vehicle registrations (bus_number + capacity + links back to a bus name)
+Architecture Decision
+IMPORTANT
+
+The current DB table buses stores both bus name and bus number together. We need to separate them. The cleanest approach is:
+
+Add a new bus_names table (id, name, type)
+Keep buses table but add bus_name_id FK (or repurpose it)
+Simpler alternative (recommended): Keep ONE buses table, but:
+
+Rename the concept: "Bus" page = manage bus names/types (unique names only, no bus_number field)
+"Bus Number" page = manage individual bus registrations (bus_number + bus_name_id + capacity)
+This avoids a big DB migration breaking existing bookings/schedules.
+
+Proposed Changes
+1. Database — New bus_names table
+
+2. New Model: BusName.java
+New model class with: id, name, busType, status
+
+3. New DAO: BusNameDAO.java
+CRUD operations for bus_names table.
+
+4. New Controller: AdminBusNameServlet.java
+Mapped to /admin/busname — handles list/add/delete of bus names.
+
+5. New JSP Pages (admin folder)
+manageBusNames.jsp — List all bus names with type, edit/delete
+addBusName.jsp — Form: bus name + bus type only\
+
+7. Update Existing: manageBuses.jsp → "Bus Number" page
+Rename/update to show: Bus Number, Bus Name (dropdown from bus_names), Capacity, Type, Status. The "Add New Bus" form will now ask for: Bus Number + select Bus Name + Capacity.
+
+8. Update addBus.jsp
+Change form to: busNumber + select busName (from bus_names dropdown) + capacity. Remove busType/farePerSeat from "Add Bus Number" (type comes from the bus name selection).
+
+9. Update addSchedule.jsp
+The bus dropdown should show: BusName (BusNumber) — e.g., "Syangja Gandaki (KT-001)"
+
+10. Complete Admin Dashboard Redesign (adminDashboard.jsp + header.jsp + style.css)
+Replace the current top navbar layout with a sidebar layout matching Figma:
+
+Left sidebar: Logo "Kalpana Travels / Admin Panel", nav links (Dashboard, Buses, Bus Number, Routes, Schedules, Staff placeholder, Seat Chart placeholder, Logout)
+Active state: navy blue pill
+Icons: emoji/SVG icons next to each nav item
+Header bar: Page title + Admin User avatar
+Stat cards: White cards with icon + number
+Booking Analytics chart (bar chart)
+Recent Bookings table
+The sidebar layout will apply to ALL admin pages.
+
+10. New admin_layout.jsp include (or integrate into header.jsp)
+Create a special admin header/sidebar that wraps admin pages — separate from the public navbar.
+
+Files to Create/Modify
+Action	File
+NEW	src/model/BusName.java
+NEW	src/dao/BusNameDAO.java
+NEW	src/service/BusNameService.java
+NEW	src/controller/AdminBusNameServlet.java
+NEW	web/admin/manageBusNames.jsp
+NEW	web/admin/addBusName.jsp
+NEW	web/admin/adminSidebar.jsp (included in all admin pages)
+MODIFY	web/css/style.css — add admin sidebar layout CSS
+MODIFY	web/admin/adminDashboard.jsp — full redesign
+MODIFY	web/admin/manageBuses.jsp — rename to Bus Number page
+MODIFY	web/admin/addBus.jsp — update form
+MODIFY	web/admin/addSchedule.jsp — update bus dropdown
+MODIFY	web/admin/manageSchedules.jsp — update bus display
+MODIFY	web/admin/manageRoutes.jsp — add sidebar
+MODIFY	web/WEB-INF/kalpana_travels.sql — add bus_names table
+Sidebar Navigation Order (matching Figma)
+Dashboard
+Buses (bus names/types)
+Bus Number (individual bus registrations)
+Routes
+Schedules
+Staff (placeholder — no backend needed)
+Seat Chart (placeholder — links to existing)
+Logout
+Verification Plan
+Automated
+Build project with Maven/Tomcat to ensure no compile errors
+Test navigation between all sidebar items
+Manual
+Add a Bus Name (e.g., "Syangja Gandaki", AC Deluxe)
+Add a Bus Number (e.g., KT-001, select Syangja Gandaki, 40 seats)
+Create a schedule and verify Bus Name + Number both appear in dropdown
+Check all 6 admin pages render with correct sidebar and Figma color theme
+
