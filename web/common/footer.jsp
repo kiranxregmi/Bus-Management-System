@@ -28,6 +28,7 @@
         <p>&copy; 2026 Kalpana Travels. All rights reserved. Crafted for comfort.</p>
     </div>
 </footer>
+<script src="${pageContext.request.contextPath}/js/main.js"></script>
 </body>
 
 </html>

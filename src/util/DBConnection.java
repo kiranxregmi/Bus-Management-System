@@ -5,6 +5,7 @@ import com.zaxxer.hikari.HikariDataSource;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,9 +32,10 @@ public class DBConnection {
             // Pool configuration
             config.setMaximumPoolSize(10);
             config.setMinimumIdle(2);
-            config.setConnectionTimeout(30000); // 30 seconds
+            config.setConnectionTimeout(5000);  // 5 seconds
             config.setIdleTimeout(600000);      // 10 minutes
             config.setMaxLifetime(1800000);     // 30 minutes
+            config.setInitializationFailTimeout(-1);
             
             // Performance optimizations for MySQL
             config.addDataSourceProperty("cachePrepStmts", "true");
@@ -43,17 +45,32 @@ public class DBConnection {
             dataSource = new HikariDataSource(config);
             LOGGER.info("HikariCP connection pool initialized successfully.");
             
+            // Run auto migrations
+            try (Connection conn = dataSource.getConnection();
+                 Statement stmt = conn.createStatement()) {
+                try {
+                    stmt.executeUpdate("ALTER TABLE routes ADD COLUMN bus_setup_id INT DEFAULT NULL");
+                } catch (SQLException ignore) {}
+                try {
+                    stmt.executeUpdate("ALTER TABLE routes ADD CONSTRAINT fk_route_bus_setup FOREIGN KEY (bus_setup_id) REFERENCES bus_setup(id) ON DELETE SET NULL");
+                } catch (SQLException ignore) {}
+            } catch (Exception e) {
+                LOGGER.log(Level.WARNING, "Auto migration failed or already run: " + e.getMessage());
+            }
+            
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Failed to initialize HikariCP connection pool.", e);
-            throw new RuntimeException("Could not initialize database connection pool.", e);
+            dataSource = null;
         }
     }
-
     /**
      * Returns a connection from the pool.
      * Existing DAOs continue to use this method seamlessly.
      */
     public static Connection getConnection() throws SQLException {
+        if (dataSource == null) {
+            throw new SQLException("Database connection pool is not available. Check MySQL and DB settings.");
+        }
         return dataSource.getConnection();
     }
 

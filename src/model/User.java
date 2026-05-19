@@ -8,7 +8,7 @@ public class User {
     private String email;
     private String password;
     private String phone;
-    private String role;
+    private UserRole role;
     private Timestamp createdAt;
 
     // Constructors
@@ -16,6 +16,14 @@ public class User {
     }
 
     public User(String fullName, String email, String password, String phone, String role) {
+        this.fullName = fullName;
+        this.email = email;
+        this.password = password;
+        this.phone = phone;
+        setRole(role);
+    }
+
+    public User(String fullName, String email, String password, String phone, UserRole role) {
         this.fullName = fullName;
         this.email = email;
         this.password = password;
@@ -65,10 +73,18 @@ public class User {
     }
 
     public String getRole() {
-        return role;
+        return role != null ? role.name() : null;
     }
 
     public void setRole(String role) {
+        this.role = UserRole.fromString(role);
+    }
+
+    public UserRole getRoleEnum() {
+        return role;
+    }
+
+    public void setRoleEnum(UserRole role) {
         this.role = role;
     }
 
@@ -80,8 +96,20 @@ public class User {
         this.createdAt = createdAt;
     }
 
+    public boolean hasRole(String... roles) {
+        if (this.role == null || roles == null) {
+            return false;
+        }
+        for (String allowedRole : roles) {
+            if (this.role.name().equalsIgnoreCase(allowedRole)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public String toString() {
-        return "User [id=" + id + ", fullName=" + fullName + ", email=" + email + ", role=" + role + "]";
+        return "User [id=" + id + ", fullName=" + fullName + ", email=" + email + ", role=" + (role != null ? role.name() : null) + "]";
     }
 }

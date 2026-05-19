@@ -8,13 +8,16 @@ import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
-import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import model.User;
+import java.util.Arrays;
+import java.util.List;
 
-@WebFilter("/admin/*")
 public class AdminFilter implements Filter {
+
+    // Allowed roles for /admin/* endpoints
+    private static final List<String> ALLOWED_ROLES = Arrays.asList("ADMIN");
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -25,14 +28,14 @@ public class AdminFilter implements Filter {
 
         if (session != null) {
             User user = (User) session.getAttribute("user");
-            if (user != null && "ADMIN".equals(user.getRole())) {
-                // User is admin - allow access
+            if (user != null && ALLOWED_ROLES.contains(user.getRole())) {
+                // User is allowed - allow access
                 chain.doFilter(request, response);
                 return;
             }
         }
 
-        // Not admin - redirect to error page
+        // Not allowed - redirect to error page
         req.setAttribute("error", "Access Denied: Admin privileges required");
         req.getRequestDispatcher("/common/error.jsp").forward(req, response);
     }

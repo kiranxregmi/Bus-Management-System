@@ -10,12 +10,11 @@ import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
-import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import model.User;
 
-@WebFilter("/*")
 public class AuthenticationFilter implements Filter {
 
     private static final List<String> PUBLIC_URLS = Arrays.asList(
@@ -53,9 +52,11 @@ public class AuthenticationFilter implements Filter {
             // Public URL - allow access
             chain.doFilter(request, response);
         } else {
-            // Protected URL - check authentication
+            // Protected URL - check authentication and role
             if (session != null && session.getAttribute("user") != null) {
-                // User is logged in - allow access
+                User user = (User) session.getAttribute("user");
+                // Example: You can add more fine-grained role-based checks here if needed
+                // For now, allow all authenticated users to access protected URLs
                 chain.doFilter(request, response);
             } else {
                 // Not logged in - store requested URL and redirect to login

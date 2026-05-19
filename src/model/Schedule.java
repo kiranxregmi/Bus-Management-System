@@ -15,7 +15,7 @@ public class Schedule {
     private Time actualArrival;
     private Integer driverId;
     private Integer conductorId;
-    private String status;
+    private ScheduleStatus status;
     private double fare;
 
     // For JOIN queries
@@ -132,10 +132,18 @@ public class Schedule {
     }
 
     public String getStatus() {
-        return status;
+        return status != null ? status.name() : null;
     }
 
     public void setStatus(String status) {
+        this.status = ScheduleStatus.fromString(status);
+    }
+
+    public ScheduleStatus getStatusEnum() {
+        return status;
+    }
+
+    public void setStatusEnum(ScheduleStatus status) {
         this.status = status;
     }
 
@@ -149,6 +157,6 @@ public class Schedule {
 
     @Override
     public String toString() {
-        return "Schedule [id=" + id + ", busId=" + busId + ", routeId=" + routeId + ", status=" + status + "]";
+        return "Schedule [id=" + id + ", busId=" + busId + ", routeId=" + routeId + ", status=" + (status != null ? status.name() : null) + "]";
     }
 }

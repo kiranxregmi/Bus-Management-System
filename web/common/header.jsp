@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
     <%@ page import="model.User" %>
         <% User sessionUser=(User) session.getAttribute("user"); String userRole=(sessionUser !=null) ?
             sessionUser.getRole() : "" ; %>

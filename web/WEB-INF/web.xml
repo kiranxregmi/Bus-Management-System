@@ -30,6 +30,7 @@
         <filter-name>AuthenticationFilter</filter-name>
         <url-pattern>/customer/*</url-pattern>
         <url-pattern>/admin/*</url-pattern>
+        <url-pattern>/operator/*</url-pattern>
         <url-pattern>/BookingServlet</url-pattern>
     </filter-mapping>
 
@@ -41,6 +42,15 @@
         <filter-name>AdminFilter</filter-name>
         <url-pattern>/admin/*</url-pattern>
         <url-pattern>/AdminBusServlet</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>OperatorFilter</filter-name>
+        <filter-class>filter.OperatorFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>OperatorFilter</filter-name>
+        <url-pattern>/operator/*</url-pattern>
     </filter-mapping>
 
 </web-app>

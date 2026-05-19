@@ -7,10 +7,15 @@ public class Booking {
     private int id;
     private int userId;
     private int scheduleId;
+    private int busSetupId;
+    private int routeId;
+    private String passengerName;
+    private String passengerPhone;
+    private String passengerEmail;
     private String seatNumbers;
     private double totalFare;
     private Timestamp bookingDate;
-    private String status;
+    private BookingStatus status;
 
     // For display purposes
     private User user;
@@ -46,6 +51,46 @@ public class Booking {
         this.scheduleId = scheduleId;
     }
 
+    public int getBusSetupId() {
+        return busSetupId;
+    }
+
+    public void setBusSetupId(int busSetupId) {
+        this.busSetupId = busSetupId;
+    }
+
+    public int getRouteId() {
+        return routeId;
+    }
+
+    public void setRouteId(int routeId) {
+        this.routeId = routeId;
+    }
+
+    public String getPassengerName() {
+        return passengerName;
+    }
+
+    public void setPassengerName(String passengerName) {
+        this.passengerName = passengerName;
+    }
+
+    public String getPassengerPhone() {
+        return passengerPhone;
+    }
+
+    public void setPassengerPhone(String passengerPhone) {
+        this.passengerPhone = passengerPhone;
+    }
+
+    public String getPassengerEmail() {
+        return passengerEmail;
+    }
+
+    public void setPassengerEmail(String passengerEmail) {
+        this.passengerEmail = passengerEmail;
+    }
+
     public String getSeatNumbers() {
         return seatNumbers;
     }
@@ -71,10 +116,18 @@ public class Booking {
     }
 
     public String getStatus() {
-        return status;
+        return status != null ? status.name() : null;
     }
 
     public void setStatus(String status) {
+        this.status = BookingStatus.fromString(status);
+    }
+
+    public BookingStatus getStatusEnum() {
+        return status;
+    }
+
+    public void setStatusEnum(BookingStatus status) {
         this.status = status;
     }
 

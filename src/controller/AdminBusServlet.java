@@ -31,7 +31,7 @@ public class AdminBusServlet extends HttpServlet {
         }
 
         User user = (User) session.getAttribute("user");
-        if (!"ADMIN".equals(user.getRole())) {
+        if (user == null || !user.hasRole("ADMIN")) {
             response.sendRedirect(request.getContextPath() + "/index.jsp");
             return;
         }

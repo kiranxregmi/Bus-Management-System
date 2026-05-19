@@ -1,16 +1,19 @@
 package service;
 
-import dao.UserDAO;
-import model.User;
-import util.PasswordUtil;
-import util.ValidationUtil;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import dao.LoyaltyPointDAO;
+import dao.UserDAO;
+import model.User;
+import util.PasswordUtil;
+import util.ValidationUtil;
+
 public class UserService {
 
     private UserDAO userDAO = new UserDAO();
+    private LoyaltyPointDAO loyaltyPointDAO = new LoyaltyPointDAO();
 
     public boolean registerUser(User user) throws SQLException {
         // Validation
@@ -33,7 +36,14 @@ public class UserService {
             user.setRole("CUSTOMER");
         }
 
-        return userDAO.registerUser(user);
+        boolean registered = userDAO.registerUser(user);
+        if (registered && "CUSTOMER".equalsIgnoreCase(user.getRole())) {
+            User savedUser = userDAO.loginUser(user.getEmail());
+            if (savedUser != null) {
+                loyaltyPointDAO.initializeLoyaltyPoints(savedUser.getId());
+            }
+        }
+        return registered;
     }
 
     public User authenticateUser(String email, String password) throws SQLException {

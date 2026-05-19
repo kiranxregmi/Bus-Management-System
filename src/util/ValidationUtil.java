@@ -29,6 +29,8 @@ public class ValidationUtil {
     }
 
     public static boolean isValidBusNumber(String busNumber) {
-        return busNumber != null && busNumber.matches("^[A-Z]{2}-[0-9]{3,4}$");
+        if (busNumber == null) return false;
+        return busNumber.matches("(?i)^[A-Z]{2}-[0-9]{3,4}$") || 
+               busNumber.matches("(?i)^[A-Z]+(\\s+[A-Z]+)?\\s+[0-9]+(\\s+[0-9]+)?\\s+[A-Z]+\\s+[0-9]{4}$");
     }
 }

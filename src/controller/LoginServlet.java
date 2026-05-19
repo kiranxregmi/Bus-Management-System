@@ -66,10 +66,12 @@ public class LoginServlet extends HttpServlet {
             session.removeAttribute("redirectAfterLogin");
             // If the redirectUrl starts with / it's relative to context path
             response.sendRedirect(request.getContextPath() + (redirectUrl.startsWith("/") ? "" : "/") + redirectUrl);
-        } else if ("ADMIN".equals(role)) {
-            response.sendRedirect("admin/adminDashboard.jsp");
+        } else if ("ADMIN".equalsIgnoreCase(role)) {
+            response.sendRedirect(request.getContextPath() + "/admin/adminDashboard.jsp");
+        } else if ("OPERATOR".equalsIgnoreCase(role)) {
+            response.sendRedirect(request.getContextPath() + "/operator/dashboard.jsp");
         } else {
-            response.sendRedirect("customer/dashboard.jsp");
+            response.sendRedirect(request.getContextPath() + "/customer/dashboard.jsp");
         }
     }
 }

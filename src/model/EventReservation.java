@@ -12,11 +12,11 @@ public class EventReservation {
     private Date requiredDate;
     private int numberOfPassengers;
     private int numberOfBuses;
-    private String preferredBusType;
+    private BusType preferredBusType;
     private String pickupLocation;
     private String dropoffLocation;
     private String description;
-    private String status;
+    private ReservationStatus status;
     private Timestamp createdAt;
 
     // Default constructor
@@ -47,8 +47,11 @@ public class EventReservation {
     public int getNumberOfBuses() { return numberOfBuses; }
     public void setNumberOfBuses(int numberOfBuses) { this.numberOfBuses = numberOfBuses; }
 
-    public String getPreferredBusType() { return preferredBusType; }
-    public void setPreferredBusType(String preferredBusType) { this.preferredBusType = preferredBusType; }
+    public String getPreferredBusType() { return preferredBusType != null ? preferredBusType.name() : null; }
+    public void setPreferredBusType(String preferredBusType) { this.preferredBusType = BusType.fromString(preferredBusType); }
+
+    public BusType getPreferredBusTypeEnum() { return preferredBusType; }
+    public void setPreferredBusTypeEnum(BusType preferredBusType) { this.preferredBusType = preferredBusType; }
 
     public String getPickupLocation() { return pickupLocation; }
     public void setPickupLocation(String pickupLocation) { this.pickupLocation = pickupLocation; }
@@ -59,8 +62,11 @@ public class EventReservation {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public String getStatus() { return status != null ? status.name() : null; }
+    public void setStatus(String status) { this.status = ReservationStatus.fromString(status); }
+
+    public ReservationStatus getStatusEnum() { return status; }
+    public void setStatusEnum(ReservationStatus status) { this.status = status; }
 
     public Timestamp getCreatedAt() { return createdAt; }
     public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }

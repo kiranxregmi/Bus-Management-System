@@ -1,0 +1,12 @@
+# Maven build output
+target/
+*.war
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+
+# Logs
+*.log
+tomcat.log

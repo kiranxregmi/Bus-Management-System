@@ -91,6 +91,22 @@ public class UserDAO {
         return 0;
     }
 
+    public java.util.List<User> getAllCustomers() throws SQLException {
+        java.util.List<User> customers = new java.util.ArrayList<>();
+        String sql = "SELECT u.* FROM users u " +
+                     "LEFT JOIN loyalty_points l ON u.id = l.user_id " +
+                     "WHERE u.role = 'CUSTOMER' " +
+                     "ORDER BY COALESCE(l.points_balance, 0) DESC, u.full_name";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                customers.add(extractUserFromResultSet(rs));
+            }
+        }
+        return customers;
+    }
+
     // Get users by role (for staff assignment)
     public java.util.List<User> getUsersByRole(String role) throws SQLException {
         java.util.List<User> users = new java.util.ArrayList<>();

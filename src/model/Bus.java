@@ -5,9 +5,9 @@ public class Bus {
     private String busNumber;
     private String busName;
     private int capacity;
-    private String busType;
+    private BusType busType;
     private double farePerSeat;
-    private String status;
+    private BusStatus status;
 
     // Constructors
     public Bus() {
@@ -17,9 +17,18 @@ public class Bus {
         this.busNumber = busNumber;
         this.busName = busName;
         this.capacity = capacity;
+        setBusType(busType);
+        this.farePerSeat = farePerSeat;
+        this.status = BusStatus.ACTIVE;
+    }
+
+    public Bus(String busNumber, String busName, int capacity, BusType busType, double farePerSeat, BusStatus status) {
+        this.busNumber = busNumber;
+        this.busName = busName;
+        this.capacity = capacity;
         this.busType = busType;
         this.farePerSeat = farePerSeat;
-        this.status = "ACTIVE";
+        this.status = status;
     }
 
     // Getters and Setters
@@ -56,10 +65,18 @@ public class Bus {
     }
 
     public String getBusType() {
-        return busType;
+        return busType != null ? busType.name() : null;
     }
 
     public void setBusType(String busType) {
+        this.busType = BusType.fromString(busType);
+    }
+
+    public BusType getBusTypeEnum() {
+        return busType;
+    }
+
+    public void setBusTypeEnum(BusType busType) {
         this.busType = busType;
     }
 
@@ -72,10 +89,18 @@ public class Bus {
     }
 
     public String getStatus() {
-        return status;
+        return status != null ? status.name() : null;
     }
 
     public void setStatus(String status) {
+        this.status = BusStatus.fromString(status);
+    }
+
+    public BusStatus getStatusEnum() {
+        return status;
+    }
+
+    public void setStatusEnum(BusStatus status) {
         this.status = status;
     }
 

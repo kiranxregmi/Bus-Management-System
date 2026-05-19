@@ -1,4 +1,20 @@
 <%@ include file="common/header.jsp" %>
+<%@ page import="java.util.*, model.Location, dao.LocationDAO" %>
+<%
+    List<Location> searchLocations;
+    try {
+        searchLocations = new LocationDAO().getAllLocations();
+    } catch (Exception e) {
+        searchLocations = new ArrayList<>();
+        String[] fallbackLocations = {"Ramdi", "Malunga", "Karadi", "Waling", "Mirdi", "Tiryasi", "Bayarghari", "Syangja", "Pokhara", "Kathmandu"};
+        for (int i = 0; i < fallbackLocations.length; i++) {
+            Location location = new Location();
+            location.setId(i + 1);
+            location.setName(fallbackLocations[i]);
+            searchLocations.add(location);
+        }
+    }
+%>
 
     <!-- ===== HERO SECTION ===== -->
     <section class="hero">
@@ -29,11 +45,9 @@
                         </div>
                         <select id="source" name="source" required>
                             <option value="" disabled selected>From</option>
-                            <option value="Kathmandu">Kathmandu</option>
-                            <option value="Pokhara">Pokhara</option>
-                            <option value="Chitwan">Chitwan</option>
-                            <option value="Lumbini">Lumbini</option>
-                            <option value="Biratnagar">Biratnagar</option>
+                            <% for (Location loc : searchLocations) { %>
+                                <option value="<%= loc.getName() %>"><%= loc.getName() %></option>
+                            <% } %>
                         </select>
                     </div>
 
@@ -56,11 +70,9 @@
                         </div>
                         <select id="destination" name="destination" required>
                             <option value="" disabled selected>To</option>
-                            <option value="Pokhara">Pokhara</option>
-                            <option value="Kathmandu">Kathmandu</option>
-                            <option value="Chitwan">Chitwan</option>
-                            <option value="Lumbini">Lumbini</option>
-                            <option value="Biratnagar">Biratnagar</option>
+                            <% for (Location loc : searchLocations) { %>
+                                <option value="<%= loc.getName() %>"><%= loc.getName() %></option>
+                            <% } %>
                         </select>
                     </div>
 
@@ -182,6 +194,7 @@
         // Update active button when date input is manually changed
         document.getElementById('travelDate').addEventListener('change', function () {
             var selectedDate = this.value;
+            var dateButtons = document.querySelectorAll('.s-btn-pill');
             dateButtons.forEach(function (btn, index) {
                 if (btn.getAttribute('data-date') === selectedDate) {
                     dateButtons.forEach(function (b) { b.classList.remove('active'); });
