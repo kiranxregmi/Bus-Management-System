@@ -5,7 +5,7 @@
 
 <%
     User user = (User) session.getAttribute("user");
-    if (user == null || !"ADMIN".equals(user.getRole())) {
+    if (user == null || (!"ADMIN".equals(user.getRole()) && !"OPERATOR".equals(user.getRole()))) {
         response.sendRedirect(request.getContextPath() + "/login.jsp");
         return;
     }
@@ -50,7 +50,11 @@
                             <td class="border p-2 text-center"><%= bookingDAO.getBookingCountByUser(p.getId()) %></td>
                             <td class="border p-2 text-center font-bold"><%= points %> pts</td>
                             <td class="border p-2">
-                                <a href="${pageContext.request.contextPath}/admin/add-loyalty-points?userId=<%= p.getId() %>" class="text-green-600 hover:underline">+5 Points</a>
+                                <% if ("ADMIN".equals(user.getRole())) { %>
+                                    <a href="${pageContext.request.contextPath}/admin/add-loyalty-points?userId=<%= p.getId() %>" class="text-green-600 hover:underline">+5 Points</a>
+                                <% } else { %>
+                                    <span class="text-gray-400">View Only</span>
+                                <% } %>
                             </td>
                         </tr>
                     <% } %>

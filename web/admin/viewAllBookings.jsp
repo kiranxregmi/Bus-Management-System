@@ -1,6 +1,6 @@
 <%@ include file="../common/header.jsp" %>
     <%@ page import="model.User, service.BookingService, model.Booking, java.util.List" %>
-        <% User user=(User) session.getAttribute("user"); if (user==null || !"ADMIN".equals(user.getRole())) {
+        <% User user=(User) session.getAttribute("user"); if (user==null || (!"ADMIN".equals(user.getRole()) && !"OPERATOR".equals(user.getRole()))) {
             response.sendRedirect(request.getContextPath() + "/login.jsp" ); return; } BookingService bookingService=new
             BookingService(); List<Booking> bookings = bookingService.getAllBookings();
             %>

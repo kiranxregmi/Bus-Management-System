@@ -4,7 +4,7 @@
 
 <%
     User sUser = (User) session.getAttribute("user");
-    if (sUser == null || !"ADMIN".equals(sUser.getRole())) {
+    if (sUser == null || (!"ADMIN".equals(sUser.getRole()) && !"OPERATOR".equals(sUser.getRole()))) {
         response.sendRedirect(request.getContextPath() + "/login.jsp");
         return;
     }

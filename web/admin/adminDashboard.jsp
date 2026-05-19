@@ -2,7 +2,7 @@
 <%@ page import="model.User, service.BusService, service.BookingService, service.RouteService, dao.EventReservationDAO, model.EventReservation, java.util.*, java.time.*, java.time.format.TextStyle" %>
 <%
     User user = (User) session.getAttribute("user");
-    if (user == null || !"ADMIN".equals(user.getRole())) {
+    if (user == null || (!"ADMIN".equals(user.getRole()) && !"OPERATOR".equals(user.getRole()))) {
         response.sendRedirect(request.getContextPath() + "/login.jsp");
         return;
     }
@@ -79,7 +79,9 @@
                 <a href="${pageContext.request.contextPath}/admin/seat-layouts.jsp">Seat Layouts</a>
                 <a href="${pageContext.request.contextPath}/admin/bus-setup.jsp">Bus Setup</a>
                 <a href="${pageContext.request.contextPath}/admin/rentals">Event Rentals</a>
-                <a href="${pageContext.request.contextPath}/admin/addOperator.jsp">Create Operator</a>
+                <% if ("ADMIN".equals(user.getRole())) { %>
+                    <a href="${pageContext.request.contextPath}/admin/addOperator.jsp">Create Operator</a>
+                <% } %>
             </section>
         </div>
 

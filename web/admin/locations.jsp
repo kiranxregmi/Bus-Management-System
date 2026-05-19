@@ -5,7 +5,7 @@
 
 <%
     User user = (User) session.getAttribute("user");
-    if (user == null || !"ADMIN".equals(user.getRole())) {
+    if (user == null || (!"ADMIN".equals(user.getRole()) && !"OPERATOR".equals(user.getRole()))) {
         response.sendRedirect(request.getContextPath() + "/login.jsp");
         return;
     }
@@ -20,6 +20,7 @@
         <a href="${pageContext.request.contextPath}/admin/management-center.jsp" class="bg-gray-500 text-white px-4 py-2 rounded">Back</a>
     </div>
 
+    <% if ("ADMIN".equals(user.getRole())) { %>
     <div class="bg-white p-6 rounded shadow mb-8">
         <h3 class="text-xl font-bold mb-4">Add Location</h3>
         <form action="${pageContext.request.contextPath}/admin/add-location" method="post" class="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -44,6 +45,12 @@
             </div>
         </form>
     </div>
+    <% } else { %>
+    <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-8 rounded shadow-sm" role="alert">
+        <p class="font-bold">Notice</p>
+        <p>You are logged in as an Operator. Only Administrators have permission to add new locations.</p>
+    </div>
+    <% } %>
 
     <div class="bg-white p-6 rounded shadow">
         <h3 class="text-xl font-bold mb-4">Locations</h3>
@@ -64,8 +71,12 @@
                             <td class="border p-2"><%= loc.getName() %></td>
                             <td class="border p-2"><%= loc.getDistrict() != null ? loc.getDistrict() : "-" %></td>
                             <td class="border p-2">
-                                <a href="${pageContext.request.contextPath}/admin/edit-location?id=<%= loc.getId() %>" class="text-blue-600 hover:underline">Edit</a> |
-                                <a href="${pageContext.request.contextPath}/admin/delete-location?id=<%= loc.getId() %>" class="text-red-600 hover:underline" onclick="return confirm('Delete this location?')">Delete</a>
+                                <% if ("ADMIN".equals(user.getRole())) { %>
+                                    <a href="${pageContext.request.contextPath}/admin/edit-location?id=<%= loc.getId() %>" class="text-blue-600 hover:underline">Edit</a> |
+                                    <a href="${pageContext.request.contextPath}/admin/delete-location?id=<%= loc.getId() %>" class="text-red-600 hover:underline" onclick="return confirm('Delete this location?')">Delete</a>
+                                <% } else { %>
+                                    <span class="text-gray-400">View Only</span>
+                                <% } %>
                             </td>
                         </tr>
                     <% } %>

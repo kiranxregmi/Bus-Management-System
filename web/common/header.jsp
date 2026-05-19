@@ -30,7 +30,7 @@
                         <% if (sessionUser==null) { %>
                             <li><a href="${pageContext.request.contextPath}/login.jsp" class="login-btn">Login</a></li>
                             <% } else { %>
-                                <% if ("ADMIN".equals(userRole)) { %>
+                                <% if ("ADMIN".equals(userRole) || "OPERATOR".equals(userRole)) { %>
                                     <li><a href="${pageContext.request.contextPath}/admin/adminDashboard.jsp">Admin Panel</a></li>
                                     <% } else { %>
                                         <li><a href="${pageContext.request.contextPath}/customer/dashboard.jsp">Dashboard</a></li>
@@ -40,7 +40,7 @@
                                                 <a href="#" style="display: flex; align-items: center;">Account <span style="margin-left: 5px;">▼</span></a>
                                                 <div class="dropdown-menu" style="display: none; position: absolute; top: 100%; right: 0; background: white; border: 1px solid #ddd; border-radius: 5px; min-width: 180px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 1000;">
                                                     <a href="${pageContext.request.contextPath}/customer/account.jsp" style="display: block; padding: 0.75rem 1rem; color: var(--dark); text-decoration: none; border-bottom: 1px solid #eee;">My Account</a>
-                                                    <% if ("ADMIN".equals(userRole)) { %>
+                                                    <% if ("ADMIN".equals(userRole) || "OPERATOR".equals(userRole)) { %>
                                                         <a href="${pageContext.request.contextPath}/admin/adminDashboard.jsp" style="display: block; padding: 0.75rem 1rem; color: var(--dark); text-decoration: none; border-bottom: 1px solid #eee;">Admin Dashboard</a>
                                                     <% } %>
                                                     <a href="${pageContext.request.contextPath}/logout" style="display: block; padding: 0.75rem 1rem; color: var(--danger); text-decoration: none;">Logout</a>

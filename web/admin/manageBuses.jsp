@@ -1,6 +1,6 @@
 <%@ include file="../common/header.jsp" %>
     <%@ page import="model.User, service.BusService, model.Bus, java.util.List" %>
-        <% User user=(User) session.getAttribute("user"); if (user==null || !"ADMIN".equals(user.getRole())) {
+        <% User user=(User) session.getAttribute("user"); if (user==null || (!"ADMIN".equals(user.getRole()) && !"OPERATOR".equals(user.getRole()))) {
             response.sendRedirect(request.getContextPath() + "/login.jsp" ); return; } BusService busService=new
             BusService(); List<Bus> buses = busService.getAllBuses();
             %>
@@ -8,7 +8,9 @@
             <div class="container" style="padding: 2rem 1rem;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
                     <h2 style="color: var(--primary);">Manage Buses</h2>
-                    <a href="addBus.jsp" class="btn" style="width: auto; padding: 0.75rem 2rem;">➕ Add New Bus</a>
+                    <% if ("ADMIN".equals(user.getRole())) { %>
+                        <a href="addBus.jsp" class="btn" style="width: auto; padding: 0.75rem 2rem;">➕ Add New Bus</a>
+                    <% } %>
                 </div>
 
                 <% if (request.getParameter("deleted") !=null) { %>
@@ -60,10 +62,14 @@
                                                         </span>
                                                     </td>
                                                     <td>
-                                                        <a href="#" class="action-btn btn-edit">Edit</a>
-                                                        <a href="${pageContext.request.contextPath}/admin/bus?action=delete&id=<%= bus.getId() %>"
-                                                            class="action-btn btn-delete"
-                                                            onclick="return confirm('Delete this bus?')">Delete</a>
+                                                        <% if ("ADMIN".equals(user.getRole())) { %>
+                                                            <a href="#" class="action-btn btn-edit">Edit</a>
+                                                            <a href="${pageContext.request.contextPath}/admin/bus?action=delete&id=<%= bus.getId() %>"
+                                                                class="action-btn btn-delete"
+                                                                onclick="return confirm('Delete this bus?')">Delete</a>
+                                                        <% } else { %>
+                                                            <span class="text-gray-400">View Only</span>
+                                                        <% } %>
                                                     </td>
                                                 </tr>
                                                 <% } %>

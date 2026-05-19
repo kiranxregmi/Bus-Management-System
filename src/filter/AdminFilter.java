@@ -17,7 +17,7 @@ import java.util.List;
 public class AdminFilter implements Filter {
 
     // Allowed roles for /admin/* endpoints
-    private static final List<String> ALLOWED_ROLES = Arrays.asList("ADMIN");
+    private static final List<String> ALLOWED_ROLES = Arrays.asList("ADMIN", "OPERATOR");
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
