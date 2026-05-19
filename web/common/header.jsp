@@ -18,7 +18,7 @@
             <body>
                 <nav class="navbar">
                     <a href="${pageContext.request.contextPath}/index.jsp" class="logo">
-                        <span class="logo-icon">..</span> Kalpana Travels
+                        <span class="logo-icon"><img src="${pageContext.request.contextPath}/gallary/logo.jpeg" alt="Logo" style="height: 35px; width: auto; border-radius: 4px; vertical-align: middle; margin-right: 5px;"></span>Kalpana Travels
                     </a>
                     <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">☰</button>
                     <ul class="nav-links">

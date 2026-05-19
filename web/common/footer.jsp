@@ -2,7 +2,7 @@
 <footer>
     <div class="footer-content">
         <div class="footer-brand">
-            <h2><span class="logo-icon">🚌</span> Kalpana Travels</h2>
+            <h2 style="display: flex; align-items: center; gap: 0.5rem;"><img src="${pageContext.request.contextPath}/gallary/logo.jpeg" alt="Logo" style="height: 35px; width: auto; border-radius: 4px;"> Kalpana Travels</h2>
             <p>Bringing people together and connecting destinations across Nepal since 2010. Your comfort and safety are our commitment.</p>
         </div>
         <div class="footer-links">

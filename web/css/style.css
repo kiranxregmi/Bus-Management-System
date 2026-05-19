@@ -156,22 +156,13 @@ a {
     text-align: center;
     overflow: hidden;
     color: white;
-    /* Scenic mountain-road gradient — swap for a real image via url() */
     background:
         linear-gradient(
-            160deg,
-            rgba(10, 20, 50, 0.82) 0%,
-            rgba(26, 62, 111, 0.70) 45%,
-            rgba(232, 93, 4, 0.45) 100%
+            rgba(10, 20, 50, 0.45) 0%,
+            rgba(26, 62, 111, 0.50) 50%,
+            rgba(10, 20, 50, 0.65) 100%
         ),
-        linear-gradient(
-            to bottom right,
-            #0a1428 0%,
-            #1a3e6f 40%,
-            #2d6a8f 65%,
-            #3a8a6e 80%,
-            #4caf76 100%
-        );
+        url('../gallary/home.jpeg');
     background-size: cover;
     background-position: center;
 }
