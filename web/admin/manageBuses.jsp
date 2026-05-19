@@ -56,7 +56,7 @@
                                                         <%= bus.getFarePerSeat() %>
                                                     </td>
                                                     <td>
-                                                        <span style="color: <%= " ACTIVE".equals(bus.getStatus())
+                                                        <span style="color: <%= "ACTIVE".equals(bus.getStatus())
                                                             ? "var(--success)" : "var(--danger)" %>;">
                                                             <%= bus.getStatus() %>
                                                         </span>

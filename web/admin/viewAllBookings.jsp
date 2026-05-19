@@ -54,7 +54,7 @@
                                     <td>NPR <%= booking.getTotalFare() %>
                                     </td>
                                     <td>
-                                        <span style="color: <%= " CONFIRMED".equals(booking.getStatus())
+                                        <span style="color: <%= "CONFIRMED".equals(booking.getStatus())
                                             ? "var(--success)" : "var(--danger)" %>;">
                                             <%= booking.getStatus() %>
                                         </span>
