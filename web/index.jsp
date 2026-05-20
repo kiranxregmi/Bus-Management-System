@@ -104,15 +104,15 @@
         <!-- Trust Badges -->
         <div class="trust-badges">
             <div class="trust-badge">
-                <span class="badge-icon">🚌</span>
+                <span class="badge-icon"></span>
                 <span>50+ Buses</span>
             </div>
             <div class="trust-badge">
-                <span class="badge-icon">⭐</span>
+                <span class="badge-icon"></span>
                 <span>4.8 Rating</span>
             </div>
             <div class="trust-badge">
-                <span class="badge-icon">👥</span>
+                <span class="badge-icon"></span>
                 <span>10k+ Travelers</span>
             </div>
         </div>
@@ -207,19 +207,19 @@
     <!-- ===== FEATURES SECTION ===== -->
     <section class="features">
         <div class="feature-card">
-            <span class="feature-icon">🛡️</span>
+            <span class="feature-icon"></span>
             <h3>Safe Travel</h3>
             <p>Your safety is our top priority. We use well-maintained buses and conduct regular safety audits for a
                 worry-free journey.</p>
         </div>
         <div class="feature-card">
-            <span class="feature-icon">⏰</span>
+            <span class="feature-icon"></span>
             <h3>On-Time Departure</h3>
             <p>We value your time. Our fleet follows strict schedules to ensure you reach your destination exactly when
                 expected.</p>
         </div>
         <div class="feature-card">
-            <span class="feature-icon">✨</span>
+            <span class="feature-icon"></span>
             <h3>Easy Booking</h3>
             <p>Experience the smoothest booking process in Nepal. Reserve your seats in just a few clicks from any
                 device.</p>

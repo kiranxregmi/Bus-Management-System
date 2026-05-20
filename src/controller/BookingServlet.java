@@ -74,7 +74,18 @@ public class BookingServlet extends HttpServlet {
             int scheduleId = Integer.parseInt(scheduleIdStr);
             List<String> seatList = Arrays.asList(selectedSeats);
 
-            int bookingId = bookingService.processBooking(user.getId(), scheduleId, seatList);
+            java.util.List<String> passengerNames = new java.util.ArrayList<>();
+            for (int i = 1; i <= seatList.size(); i++) {
+                String pName = request.getParameter("passengerName_" + i);
+                if (pName != null && !pName.isBlank()) {
+                    passengerNames.add(pName.trim());
+                }
+            }
+            String joinedPassengerNames = String.join(", ", passengerNames);
+            String contactPhone = request.getParameter("contactPhone");
+            String contactEmail = request.getParameter("contactEmail");
+
+            int bookingId = bookingService.processBooking(user.getId(), scheduleId, seatList, joinedPassengerNames, contactPhone, contactEmail);
 
             if (bookingId > 0) {
                 // Get booking details for confirmation page
@@ -86,11 +97,17 @@ public class BookingServlet extends HttpServlet {
                 String destination = request.getParameter("destination");
                 String totalFare = String.valueOf((Double.parseDouble(request.getParameter("fare")) * seatList.size()));
 
+                String encBusName = java.net.URLEncoder.encode(busName != null ? busName : "", "UTF-8");
+                String encDeparture = java.net.URLEncoder.encode(departure != null ? departure : "", "UTF-8");
+                String encArrival = java.net.URLEncoder.encode(arrival != null ? arrival : "", "UTF-8");
+                String encSource = java.net.URLEncoder.encode(source != null ? source : "", "UTF-8");
+                String encDestination = java.net.URLEncoder.encode(destination != null ? destination : "", "UTF-8");
+
                 // Redirect to confirmation page
                 response.sendRedirect(request.getContextPath() + "/customer/bookingConfirmation.jsp?bookingId=" + bookingId 
                     + "&scheduleId=" + scheduleId + "&seats=" + seats + "&totalFare=" + totalFare 
-                    + "&busName=" + busName + "&departure=" + departure + "&arrival=" + arrival 
-                    + "&source=" + source + "&destination=" + destination);
+                    + "&busName=" + encBusName + "&departure=" + encDeparture + "&arrival=" + encArrival 
+                    + "&source=" + encSource + "&destination=" + encDestination);
             } else {
                 request.setAttribute("error", "Booking failed. Please try again.");
                 request.getRequestDispatcher("/customer/bookSeat.jsp").forward(request, response);

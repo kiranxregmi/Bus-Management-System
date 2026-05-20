@@ -158,9 +158,9 @@ a {
     color: white;
     background:
         linear-gradient(
-            rgba(10, 20, 50, 0.45) 0%,
-            rgba(26, 62, 111, 0.50) 50%,
-            rgba(10, 20, 50, 0.65) 100%
+            rgba(10, 20, 50, 0.23) 0%,
+            rgba(26, 62, 111, 0.23) 50%,
+            rgba(10, 20, 50, 0.23) 100%
         ),
         url('../gallary/home.jpeg');
     background-size: cover;

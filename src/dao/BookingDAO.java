@@ -12,7 +12,7 @@ public class BookingDAO {
 
     // Create booking
     public int createBooking(Booking booking) throws SQLException {
-        String sql = "INSERT INTO bookings (user_id, schedule_id, seat_numbers, total_fare, status) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO bookings (user_id, schedule_id, seat_numbers, total_fare, status, passenger_name, passenger_phone, passenger_email) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -22,6 +22,9 @@ public class BookingDAO {
             pstmt.setString(3, booking.getSeatNumbers());
             pstmt.setDouble(4, booking.getTotalFare());
             pstmt.setString(5, "CONFIRMED");
+            pstmt.setString(6, booking.getPassengerName());
+            pstmt.setString(7, booking.getPassengerPhone());
+            pstmt.setString(8, booking.getPassengerEmail());
 
             pstmt.executeUpdate();
 
@@ -351,6 +354,26 @@ public class BookingDAO {
             pstmt.setDouble(4, revenue);
             pstmt.executeUpdate();
         }
+    }
+
+    public java.util.List<String> getBookedSeatsBySchedule(int scheduleId) throws SQLException {
+        java.util.List<String> bookedSeats = new java.util.ArrayList<>();
+        String sql = "SELECT seat_numbers FROM bookings WHERE schedule_id = ? AND status = 'CONFIRMED'";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, scheduleId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    String seats = rs.getString("seat_numbers");
+                    if (seats != null && !seats.isEmpty()) {
+                        for (String seat : seats.split(",")) {
+                            bookedSeats.add(seat.trim());
+                        }
+                    }
+                }
+            }
+        }
+        return bookedSeats;
     }
 
     private boolean hasColumn(ResultSet rs, String columnName) throws SQLException {

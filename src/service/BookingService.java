@@ -16,20 +16,24 @@ public class BookingService {
     private final dao.LoyaltyPointDAO loyaltyPointDAO = new dao.LoyaltyPointDAO();
 
     public int processBooking(int userId, int scheduleId, List<String> selectedSeats) throws SQLException {
+        return processBooking(userId, scheduleId, selectedSeats, null, null, null);
+    }
+
+    public int processBooking(int userId, int scheduleId, List<String> selectedSeats, String passengerName, String passengerPhone, String passengerEmail) throws SQLException {
         // Validate seats
         if (selectedSeats == null || selectedSeats.isEmpty()) {
             throw new IllegalArgumentException("Please select at least one seat");
         }
 
-        // Get schedule to calculate fare
-        // For simplicity, we'll calculate fare based on bus fare
-
-        // In a real implementation, you'd fetch the bus fare:
-        // Bus bus = busDAO.getBusByScheduleId(scheduleId);
-        // double farePerSeat = bus.getFarePerSeat();
-
-        // For now, using a placeholder fare calculation
-        double farePerSeat = 1000.00; // This should come from database
+        double farePerSeat = 1000.00;
+        try {
+            model.Schedule schedule = new dao.ScheduleDAO().getScheduleById(scheduleId);
+            if (schedule != null && schedule.getFare() > 0) {
+                farePerSeat = schedule.getFare();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         double totalFare = farePerSeat * selectedSeats.size();
 
         // Create booking
@@ -38,6 +42,9 @@ public class BookingService {
         booking.setScheduleId(scheduleId);
         booking.setSeatNumbers(String.join(",", selectedSeats));
         booking.setTotalFare(totalFare);
+        booking.setPassengerName(passengerName);
+        booking.setPassengerPhone(passengerPhone);
+        booking.setPassengerEmail(passengerEmail);
 
         int bookingId = bookingDAO.createBooking(booking);
 
