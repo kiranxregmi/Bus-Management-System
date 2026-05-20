@@ -65,7 +65,6 @@
     <build>
         <!-- Tells Maven where your Java source files are located -->
         <sourceDirectory>src</sourceDirectory>
-        <finalName>BusManagementSystem</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -90,9 +89,13 @@
                             <cargo.servlet.port>${cargo.port}</cargo.servlet.port>
                         </properties>
                     </configuration>
-                    <!-- Let Cargo deploy the built WAR under its default context
-                         (using the artifact finalName). Removing explicit deployables
-                         to avoid unsupported <context> configuration errors. -->
+                    <deployables>
+                        <deployable>
+                            <type>war</type>
+                            <location>${project.build.directory}/${project.build.finalName}.war</location>
+                            <context>/</context>
+                        </deployable>
+                    </deployables>
                 </configuration>
             </plugin>
         </plugins>
