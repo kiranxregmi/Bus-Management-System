@@ -9,346 +9,311 @@ Database:  MySQL
 Server:    Apache Tomcat (or similar J2EE server)
 Tools:     XAMPP/WAMP + GitHub
 
+# Kalpana Travels — Bus Management System
+
+A full-stack Java EE web application for managing bus bookings, schedules, routes, and administration for *Kalpana Travels*. Built with JSP + Servlets following the MVC architecture pattern.
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | JSP, CSS (Flexbox/Grid — no Bootstrap) |
+| Backend | Java 21, Jakarta Servlet API 6.0 |
+| Database | MySQL (kalpana_travels) |
+| Server | Apache Tomcat 10.1 (via Cargo Maven plugin) |
+| DB Pooling | HikariCP |
+| Build Tool | Maven |
+| Architecture | MVC (Model–View–Controller) |
+
+---
+
+## Prerequisites
+
+Before running the project, make sure you have the following installed:
+
+- *Java 21* or higher (java -version)
+- *Maven 3.8+* (mvn -version)
+- *MySQL* running locally on port 3306
+- Internet access (Cargo downloads Tomcat automatically on first run)
+
+---
+
+## Database Setup
+
+*1. Start MySQL* (via XAMPP, WAMP, or standalone MySQL service).
+
+*2. Create the database and import the schema:*
+
+sql
+CREATE DATABASE kalpana_travels;
 
 
+Then import the SQL dump:
+
+bash
+mysql -u root -p kalpana_travels < web/WEB-INF/kalpana_travels.sql
 
 
+Or open the file in phpMyAdmin and run it against the kalpana_travels database.
+
+*3. Verify your DB credentials* in src/util/DBConnection.java:
+
+java
+private static final String URL  = "jdbc:mysql://localhost:3306/kalpana_travels";
+private static final String USER = "root";
+private static final String PASSWORD = "";   // ← update if you have a MySQL password
 
 
+---
 
-BusManagementSystem/
+## Running the Application
+
+bash
+mvn clean package cargo:run
+
+
+Cargo will automatically download Tomcat 10.1 on the first run (requires internet). Subsequent runs use the cached download.
+
+Once started, open your browser at:
+
+
+http://localhost:8080/bus
+
+
+To stop the server, press Ctrl + C in the terminal.
+
+---
+
+## Default Login Credentials
+
+The SQL seed data includes two ready-to-use accounts:
+
+| Role | Email | Password |
+|---|---|---|
+| Admin | admin@kalpana.com | admin123 |
+| Customer | customer@kalpana.com | customer123 |
+
+> Passwords are stored as SHA-256 hashes in the database.
+
+---
+
+## Project Structure
+
+
+Bus-Management-System/
 │
-├── src/
-│   │
-│   ├── model/                              [Model - M of MVC Pattern]
-│   │   │                                   ➤ Contains POJOs (Plain Old Java Objects)
-│   │   │                                   ➤ Represents database tables as Java objects
-│   │   │                                   ➤ Contains only fields, getters, setters, constructors
-│   │   │
-│   │   ├── User.java                       ➤ User entity with fields: id, fullName, email, password, phone, role(enum: ADMIN/CUSTOMER), createdAt
-│   │   │                                   ➤ Used for: Login, Registration, Session management
-│   │   │
-│   │   ├── Bus.java                        ➤ Bus entity with fields: id, busNumber, busName, capacity, busType(enum: AC/NON_AC/SLEEPER), farePerSeat, status(enum: ACTIVE/INACTIVE)
-│   │   │                                   ➤ Used for: Adding buses, Searching buses, Fare calculation
-│   │   │
-│   │   ├── Route.java                      ➤ Route entity with fields: id, source, destination, distance, duration
-│   │   │                                   ➤ Used for: Search functionality, Fare calculation based on distance
-│   │   │
-│   │   ├── Schedule.java                   ➤ Schedule entity: id, busId, routeId, departureTime, arrivalTime, availableSeats, travelDate
-│   │   │                                   ➤ Links Bus + Route with specific timing
-│   │   │
-│   │   └── Booking.java                    ➤ Booking entity: id, userId, scheduleId, seatNumbers(List), totalFare, bookingDate, status(enum: CONFIRMED/CANCELLED/PENDING)
-│   │                                       ➤ Used for: Ticket generation, Booking history
-│   │
-│   ├── dao/                                [Data Access Object Layer]
-│   │   │                                   ➤ Handles ALL database operations (CRUD)
-│   │   │                                   ➤ Contains SQL queries and JDBC code
-│   │   │                                   ➤ No business logic here - only DB interactions
-│   │   │
-│   │   ├── UserDAO.java                    ➤ Methods: registerUser(User), loginUser(email, password), getUserById(id), updateProfile(User), checkEmailExists(email)
-│   │   │                                   ➤ SQL: INSERT, SELECT, UPDATE on 'users' table
-│   │   │
-│   │   ├── BusDAO.java                     ➤ Methods: addBus(Bus), updateBus(Bus), deleteBus(id), getAllBuses(), searchBuses(source, dest, date), getBusById(id)
-│   │   │                                   ➤ SQL: CRUD on 'buses' and 'schedules' tables
-│   │   │
-│   │   └── BookingDAO.java                 ➤ Methods: createBooking(Booking), cancelBooking(id), getBookingsByUser(userId), getAllBookings(), checkSeatAvailability(scheduleId, seats)
-│   │                                       ➤ SQL: INSERT, UPDATE, SELECT on 'bookings' table
-│   │
-│   ├── service/                            [Service/Business Logic Layer]
-│   │   │                                   ➤ Contains business rules and validation logic
-│   │   │                                   ➤ Acts as bridge between Controller and DAO
-│   │   │                                   ➤ Required per coursework Page 5, point 5
-│   │   │
-│   │   ├── UserService.java                ➤ Methods: registerUser(User), authenticateUser(email, password), validateUserData(User)
-│   │   │                                   ➤ Business logic: Email format check, Password strength, Phone validation, Calls PasswordUtil for hashing
-│   │   │
-│   │   ├── BusService.java                 ➤ Methods: searchAvailableBuses(source, dest, date), addNewBus(Bus), validateBusData(Bus), calculateFare(distance, busType)
-│   │   │                                   ➤ Business logic: Check if bus number already exists, Validate capacity > 0
-│   │   │
-│   │   └── BookingService.java             ➤ Methods: processBooking(userId, scheduleId, seats), cancelBooking(bookingId), calculateTotalFare(baseFare, seatCount), validateBooking(scheduleId, seats)
-│   │                                       ➤ Business logic: Check if seats available, Calculate total fare, Prevent double booking
-│   │
-│   ├── controller/                         [Controller - C of MVC Pattern]
-│   │   │                                   ➤ Handles HTTP requests/responses
-│   │   │                                   ➤ Extends HttpServlet class
-│   │   │                                   ➤ Uses @WebServlet annotation for URL mapping
-│   │   │
-│   │   ├── LoginServlet.java               ➤ @WebServlet("/login")
-│   │   │                                   ➤ doPost(): Gets email/password → Calls UserService.authenticateUser() → Creates session → Redirects based on role (ADMIN→/admin/dashboard, CUSTOMER→/customer/dashboard)
-│   │   │                                   ➤ doGet(): Displays login page or redirects if already logged in
-│   │   │
-│   │   ├── RegisterServlet.java            ➤ @WebServlet("/register")
-│   │   │                                   ➤ doPost(): Gets form data → Validates via UserService → Calls UserDAO.registerUser() → Redirects to login with success message
-│   │   │                                   ➤ doGet(): Displays registration form
-│   │   │
-│   │   ├── LogoutServlet.java              ➤ @WebServlet("/logout")
-│   │   │                                   ➤ doGet(): Invalidates session → Clears cookies → Redirects to index.jsp
-│   │   │
-│   │   ├── BusServlet.java                 ➤ @WebServlet("/bus")
-│   │   │                                   ➤ doGet(): Handles search requests → Calls BusService.searchAvailableBuses() → Forwards to searchResults.jsp
-│   │   │                                   ➤ doPost(): Handles admin adding new bus (if role=ADMIN) → Calls BusService.addNewBus()
-│   │   │
-│   │   ├── BookingServlet.java             ➤ @WebServlet("/booking")
-│   │   │                                   ➤ doPost(): Processes booking → Calls BookingService.processBooking() → Forwards to ticket.jsp
-│   │   │                                   ➤ doGet(): Displays booking form or user's bookings
-│   │   │
-│   │   └── AdminBusServlet.java            ➤ @WebServlet("/admin/bus/*")
-│   │                                       ➤ doGet(): Lists all buses for admin → Forwards to manageBuses.jsp
-│   │                                       ➤ doPost(): Handles bus updates/deletions (protected by AdminFilter)
-│   │
-│   ├── filter/                             [Servlet Filters - Intercept Requests]
-│   │   │                                   ➤ Executes BEFORE request reaches Servlet
-│   │   │                                   ➤ Required per coursework Page 4, Section 4.d
-│   │   │
-│   │   ├── AuthenticationFilter.java       ➤ @WebFilter("/*")  (applies to all URLs)
-│   │   │                                   ➤ doFilter(): Checks if HttpSession has "user" attribute for protected URLs
-│   │   │                                   ➤ Allows: /login, /register, /index.jsp, /css/*, /about.jsp, /contact.jsp
-│   │   │                                   ➤ Redirects to /login if not authenticated and trying to access protected pages
-│   │   │
-│   │   └── AdminAuthorizationFilter.java   ➤ @WebFilter("/admin/*")
-│   │                                       ➤ doFilter(): Checks if session user has role="ADMIN"
-│   │                                       ➤ If not admin → Redirects to /common/error.jsp with "Access Denied" message
-│   │
-│   └── util/                               [Utility/Helper Classes]
-│       │                                   ➤ Reusable helper methods across the application
-│       │                                   ➤ Required per coursework Page 5, point 4
-│       │
-│       ├── DBConnection.java               ➤ Provides database connection using JDBC
-│       │                                   ➤ Method: getConnection() returns java.sql.Connection
-│       │                                   ➤ Contains: DB_URL, DB_USER, DB_PASSWORD constants
-│       │                                   ➤ Uses: Class.forName("com.mysql.cj.jdbc.Driver")
-│       │
-│       ├── PasswordUtil.java               ➤ Security utility for password encryption
-│       │                                   ➤ Method: hashPassword(String plainPassword) → Returns hashed string
-│       │                                   ➤ Method: verifyPassword(String plainPassword, String hashedPassword) → Returns boolean
-│       │                                   ➤ Uses: BCrypt or MessageDigest (SHA-256)
-│       │                                   ➤ Required per coursework Page 4, Section 4.c
-│       │
-│       └── ValidationUtil.java             ➤ Input validation utility
-│           │                               ➤ Methods: isValidEmail(String), isValidPhone(String), isNotEmpty(String), isValidPassword(String)
-│           │                               ➤ Returns boolean and error messages
-│           │                               ➤ Required per coursework Page 7, point 1
+├── pom.xml                          ← Maven build config (Cargo + Tomcat 10)
 │
-├── web/                                    [View - V of MVC Pattern]
-│   │                                       ➤ Contains all JSP, CSS, JavaScript files
-│   │                                       ➤ Accessible via browser (except WEB-INF)
-│   │
-│   ├── common/                             [Reusable JSP Components]
-│   │   │                                   ➤ Included in other JSPs using <%@ include file="" %>
-│   │   │
-│   │   ├── header.jsp                      ➤ Contains: <head> section, Navigation bar, Logo
-│   │   │                                   ➤ Dynamic: Shows "Login/Register" OR "Welcome User/Logout" based on session
-│   │   │                                   ➤ Links: Home, About, Contact, Dashboard (if logged in), Admin (if admin)
-│   │   │
-│   │   ├── footer.jsp                      ➤ Contains: Copyright text, Footer links, Closing </body> and </html> tags
-│   │   │
-│   │   └── error.jsp                       ➤ Generic error page displayed when exceptions occur
-│   │                                       ➤ Shows: Error message from request attribute, "Go Back" button
-│   │                                       ➤ Required per coursework Page 7, "Must have error pages"
-│   │
-│   ├── css/                                [Styling - Custom CSS Only]
-│   │   │
-│   │   └── style.css                       ➤ ALL styling for the application
-│   │                                       ➤ Uses: Flexbox for layouts, CSS Grid for seat selection, Media queries for mobile responsiveness
-│   │                                       ➤ NO Bootstrap allowed per coursework Page 5
-│   │                                       ➤ Contains styles for: forms, tables, cards, buttons, navigation, seat grid
-│   │
-│   ├── js/                                 [Client-side JavaScript]
-│   │   │
-│   │   └── validation.js                   ➤ Client-side form validation (optional per coursework Page 5)
-│   │                                       ➤ Functions: validateEmail(), validatePhone(), validatePassword(), checkPasswordMatch()
-│   │                                       ➤ Enhances UX before form submission to server
-│   │
-│   ├── index.jsp                           ➤ Homepage/Landing page
-│   │                                       ➤ Contains: Welcome message, Bus Search Form (source, destination, travel date)
-│   │                                       ➤ Displays: Featured routes, Promotional banners
-│   │                                       ➤ Access: Public (no login required)
-│   │
-│   ├── login.jsp                           ➤ Login page
-│   │                                       ➤ Contains: Email field, Password field, Submit button, Link to Register
-│   │                                       ➤ Displays: Error message if login fails (from request attribute)
-│   │                                       ➤ Access: Public
-│   │
-│   ├── register.jsp                        ➤ User registration page
-│   │                                       ➤ Contains: Full Name, Email, Phone, Password, Confirm Password fields
-│   │                                       ➤ Client-side validation via validation.js
-│   │                                       ➤ Displays: Validation errors returned from server
-│   │                                       ➤ Access: Public
-│   │
-│   ├── about.jsp                           ➤ About page
-│   │                                       ➤ Contains: Information about the bus company, services offered, team details
-│   │                                       ➤ Access: Public
-│   │                                       ➤ Required per coursework Page 6, point 7.a (easy 5 marks)
-│   │
-│   ├── contact.jsp                         ➤ Contact page
-│   │                                       ➤ Contains: Contact form (name, email, message), Company address, Phone number, Map placeholder
-│   │                                       ➤ Access: Public
-│   │                                       ➤ Required per coursework Page 6, point 7.b (easy 5 marks)
-│   │
-│   ├── customer/                           [Customer/User Specific Pages]
-│   │   │                                   ➤ Access restricted to logged-in users with role="CUSTOMER"
-│   │   │
-│   │   ├── dashboard.jsp                   ➤ Customer dashboard/homepage after login
-│   │   │                                   ➤ Displays: Welcome message with user name, Upcoming trips (recent bookings), Quick actions (Search Bus, View Bookings)
-│   │   │                                   ➤ Shows: Summary cards (Total bookings, Upcoming trips, Completed trips)
-│   │   │
-│   │   ├── searchResults.jsp               ➤ Displays available buses matching search criteria
-│   │   │                                   ➤ Contains: Table with columns (Bus Number, Bus Type, Departure, Arrival, Fare, Available Seats, Action)
-│   │   │                                   ➤ Each row has "Book Now" button linking to bookSeat.jsp with scheduleId
-│   │   │
-│   │   ├── bookSeat.jsp                    ➤ Seat selection and booking page
-│   │   │                                   ➤ Displays: Visual seat grid (CSS Grid), Selected bus details, Fare summary
-│   │   │                                   ➤ Contains: Passenger details form (name, age, phone per seat), Proceed to Payment button
-│   │   │                                   ➤ Submits to BookingServlet via POST
-│   │   │
-│   │   ├── ticket.jsp                      ➤ Booking confirmation / Printable ticket
-│   │   │                                   ➤ Displays: Booking ID, Passenger details, Bus details, Seat numbers, Journey date/time, Total fare, QR code placeholder, Print button
-│   │   │                                   ➤ Access: After successful booking
-│   │   │
-│   │   └── myBookings.jsp                  ➤ User's booking history
-│   │                                       ➤ Contains: Table of all bookings (Upcoming and Past)
-│   │                                       ➤ Columns: Booking ID, Bus, Route, Date, Seats, Fare, Status, Action (Cancel button for upcoming bookings)
-│   │                                       ➤ Cancel button visible only if booking status = CONFIRMED and travel date > today
-│   │
-│   └── admin/                              [Administrator Specific Pages]
-│       │                                   ➤ Access restricted to logged-in users with role="ADMIN"
-│       │                                   ➤ Protected by AdminAuthorizationFilter
-│       │
-│       ├── adminDashboard.jsp              ➤ Admin dashboard/homepage
-│       │                                   ➤ Displays: Summary cards (Total Buses, Total Users, Today's Bookings, Total Revenue)
-│       │                                   ➤ Contains: Quick action buttons (Add Bus, Manage Buses, View All Bookings)
-│       │                                   ➤ Shows: Recent bookings table, Charts (using CSS only, no external libraries)
-│       │
-│       ├── addBus.jsp                      ➤ Form to add a new bus to the system
-│       │                                   ➤ Fields: Bus Number, Bus Name, Capacity, Bus Type (dropdown), Fare per Seat, Status (Active/Inactive)
-│       │                                   ➤ Submits to AdminBusServlet via POST
-│       │                                   ➤ Displays validation errors if any
-│       │
-│       ├── manageBuses.jsp                 ➤ List all buses with CRUD operations
-│       │                                   ➤ Contains: Editable table showing all buses
-│       │                                   ➤ Actions per row: Edit (opens edit form), Delete (with confirmation popup)
-│       │                                   ➤ Option to filter by status (Active/Inactive)
-│       │
-│       └── viewAllBookings.jsp             ➤ View all bookings across all users
-│           │                               ➤ Contains: Filterable table with all bookings
-│           │                               ➤ Filters: By date range, By bus, By status
-│           │                               ➤ Columns: Booking ID, User Name, Bus Number, Route, Date, Seats, Fare, Status
-│           │                               ➤ Admin can cancel bookings from this page
+├── src/                             ← All Java source files
+│   ├── controller/                  ← Servlets — handle HTTP requests
+│   ├── service/                     ← Business logic layer
+│   ├── dao/                         ← Database access (JDBC/SQL)
+│   ├── model/                       ← POJOs (User, Bus, Route, Schedule, Booking)
+│   ├── filter/                      ← Authentication & authorization filters
+│   └── util/                        ← DBConnection, PasswordUtil, ValidationUtil
 │
-└── WEB-INF/                                [Protected Configuration Directory]
-    │                                       ➤ NOT directly accessible from browser
-    │                                       ➤ Contains deployment descriptor and libraries
-    │
-    ├── web.xml                             ➤ Deployment Descriptor (DD) file
-    │                                       ➤ Configures: Welcome file list (index.jsp)
-    │                                       ➤ Defines: Error pages for HTTP error codes
-    │                                       │   • <error-page><error-code>404</error-code><location>/common/error.jsp</location>
-    │                                       │   • <error-page><error-code>500</error-code><location>/common/error.jsp</location>
-    │                                       ➤ Defines: Session timeout (<session-config><session-timeout>30</session-timeout>)
-    │                                       ➤ Maps: Filters to URL patterns
-    │                                       │   • AuthenticationFilter → /*
-    │                                       │   • AdminAuthorizationFilter → /admin/*
-    │                                       ➤ Note: Servlets use @WebServlet annotation (no XML mapping needed)
-    │
-    └── lib/                                [Third-party JAR Libraries]
-        │
-        └── mysql-connector-java-8.x.x.jar  ➤ MySQL JDBC Driver
-                                            ➤ Required for database connectivity
-                                            ➤ Download from MySQL official website
+├── web/                             ← View layer (JSP, CSS, static files)
+│   ├── index.jsp                    ← Public homepage with bus search
+│   ├── login.jsp
+│   ├── register.jsp
+│   ├── about.jsp
+│   ├── contact.jsp
+│   ├── rental.jsp                   ← Bus charter/rental enquiry
+│   ├── eventReservation.jsp         ← Event bus reservation form
+│   ├── admin/                       ← Admin-only JSP pages
+│   ├── customer/                    ← Logged-in customer JSP pages
+│   ├── common/                      ← Shared header, footer, error page
+│   ├── css/style.css                ← All custom styles
+│   └── WEB-INF/
+│       ├── web.xml                  ← Servlet/filter configuration
+│       └── kalpana_travels.sql      ← Database schema + seed data
+│
+└── target/                          ← Maven build output (auto-generated)
 
 
-Admin Dashboard Redesign + Bus Number Feature
-Overview
-Redesign the entire admin dashboard to match the Figma UI (dark navy sidebar, yellow/orange accents, clean white content area, Kalpana Travels branding) and add a new "Bus Number" section between Bus and Route in the sidebar. The existing buses table will be split conceptually:
+---
 
-Bus → stores bus_name + bus_type only (the "brand" like "Syangja Gandaki")
-Bus Number → stores individual vehicle registrations (bus_number + capacity + links back to a bus name)
-Architecture Decision
-IMPORTANT
+## Architecture
 
-The current DB table buses stores both bus name and bus number together. We need to separate them. The cleanest approach is:
+The project follows a strict *4-layer MVC pattern*:
 
-Add a new bus_names table (id, name, type)
-Keep buses table but add bus_name_id FK (or repurpose it)
-Simpler alternative (recommended): Keep ONE buses table, but:
 
-Rename the concept: "Bus" page = manage bus names/types (unique names only, no bus_number field)
-"Bus Number" page = manage individual bus registrations (bus_number + bus_name_id + capacity)
-This avoids a big DB migration breaking existing bookings/schedules.
+Browser → Filter → Controller (Servlet) → Service → DAO → MySQL
+                                 ↓
+                              JSP (View)
 
-Proposed Changes
-1. Database — New bus_names table
 
-2. New Model: BusName.java
-New model class with: id, name, busType, status
+| Layer | Package | Role |
+|---|---|---|
+| *Model* | model/ | Plain Java objects mapping to DB tables |
+| *View* | web/*.jsp | JSP pages that render HTML |
+| *Controller* | controller/ | Servlets that receive requests and call services |
+| *Service* | service/ | Business rules, validation, orchestration |
+| *DAO* | dao/ | All SQL queries via JDBC |
+| *Filter* | filter/ | Security — intercepts requests before servlets |
+| *Util* | util/ | DB connection pool, password hashing, validation helpers |
 
-3. New DAO: BusNameDAO.java
-CRUD operations for bus_names table.
+---
 
-4. New Controller: AdminBusNameServlet.java
-Mapped to /admin/busname — handles list/add/delete of bus names.
+## Features
 
-5. New JSP Pages (admin folder)
-manageBusNames.jsp — List all bus names with type, edit/delete
-addBusName.jsp — Form: bus name + bus type only\
+### Public (No Login Required)
+- Homepage with bus search by source, destination, and date
+- View search results with available buses
+- User registration and login
+- About and Contact pages
+- Event/charter bus reservation enquiry form
+- Bus rental enquiry page
 
-7. Update Existing: manageBuses.jsp → "Bus Number" page
-Rename/update to show: Bus Number, Bus Name (dropdown from bus_names), Capacity, Type, Status. The "Add New Bus" form will now ask for: Bus Number + select Bus Name + Capacity.
+### Customer (Login Required)
+- Customer dashboard with booking summary
+- Select a schedule and pick seats from a visual seat grid
+- View booking confirmation with full trip details
+- View and print ticket
+- View full booking history
+- Cancel confirmed upcoming bookings
+- Manage account profile
 
-8. Update addBus.jsp
-Change form to: busNumber + select busName (from bus_names dropdown) + capacity. Remove busType/farePerSeat from "Add Bus Number" (type comes from the bus name selection).
+### Admin (Admin Role Required)
+- Admin dashboard with system statistics (total buses, users, bookings, revenue)
+- Add, edit, and delete buses
+- Add, edit, and delete routes
+- Add, edit, and delete schedules (assign buses to routes with dates/times)
+- View all customer bookings across the system
+- Manage bus rental requests
+- Generate reports (revenue, booking statistics)
+- View trip sheets (passenger manifests per schedule)
 
-9. Update addSchedule.jsp
-The bus dropdown should show: BusName (BusNumber) — e.g., "Syangja Gandaki (KT-001)"
+---
 
-10. Complete Admin Dashboard Redesign (adminDashboard.jsp + header.jsp + style.css)
-Replace the current top navbar layout with a sidebar layout matching Figma:
+## Servlets (URL Mapping)
 
-Left sidebar: Logo "Kalpana Travels / Admin Panel", nav links (Dashboard, Buses, Bus Number, Routes, Schedules, Staff placeholder, Seat Chart placeholder, Logout)
-Active state: navy blue pill
-Icons: emoji/SVG icons next to each nav item
-Header bar: Page title + Admin User avatar
-Stat cards: White cards with icon + number
-Booking Analytics chart (bar chart)
-Recent Bookings table
-The sidebar layout will apply to ALL admin pages.
+| Servlet | URL | Purpose |
+|---|---|---|
+| LoginServlet | /login | Authenticate user, create session |
+| LogoutServlet | /logout | Invalidate session, clear cookies |
+| RegisterServlet | /register | Register new customer account |
+| BusServlet | /bus | Public bus search |
+| BookingServlet | /booking | Process seat booking, view/cancel bookings |
+| AdminBusServlet | /admin/bus | Admin CRUD for buses |
+| AdminRouteServlet | /admin/route | Admin CRUD for routes |
+| AdminScheduleServlet | /admin/schedule | Admin CRUD for schedules |
+| AdminRentalServlet | /admin/rental | Admin manage rental requests |
+| ReportServlet | /admin/report | Generate revenue/booking reports |
+| TripSheetServlet | /admin/tripsheet | Passenger manifest per schedule |
+| EventReservationServlet | /eventReservation | Submit event bus reservation |
 
-10. New admin_layout.jsp include (or integrate into header.jsp)
-Create a special admin header/sidebar that wraps admin pages — separate from the public navbar.
+---
 
-Files to Create/Modify
-Action	File
-NEW	src/model/BusName.java
-NEW	src/dao/BusNameDAO.java
-NEW	src/service/BusNameService.java
-NEW	src/controller/AdminBusNameServlet.java
-NEW	web/admin/manageBusNames.jsp
-NEW	web/admin/addBusName.jsp
-NEW	web/admin/adminSidebar.jsp (included in all admin pages)
-MODIFY	web/css/style.css — add admin sidebar layout CSS
-MODIFY	web/admin/adminDashboard.jsp — full redesign
-MODIFY	web/admin/manageBuses.jsp — rename to Bus Number page
-MODIFY	web/admin/addBus.jsp — update form
-MODIFY	web/admin/addSchedule.jsp — update bus dropdown
-MODIFY	web/admin/manageSchedules.jsp — update bus display
-MODIFY	web/admin/manageRoutes.jsp — add sidebar
-MODIFY	web/WEB-INF/kalpana_travels.sql — add bus_names table
-Sidebar Navigation Order (matching Figma)
-Dashboard
-Buses (bus names/types)
-Bus Number (individual bus registrations)
-Routes
-Schedules
-Staff (placeholder — no backend needed)
-Seat Chart (placeholder — links to existing)
-Logout
-Verification Plan
-Automated
-Build project with Maven/Tomcat to ensure no compile errors
-Test navigation between all sidebar items
-Manual
-Add a Bus Name (e.g., "Syangja Gandaki", AC Deluxe)
-Add a Bus Number (e.g., KT-001, select Syangja Gandaki, 40 seats)
-Create a schedule and verify Bus Name + Number both appear in dropdown
-Check all 6 admin pages render with correct sidebar and Figma color theme
+## Security — Sessions and Cookies
+
+### Session (HttpSession)
+
+The HttpSession is the core of the authentication system.
+
+*On login*, the authenticated User object is stored in the session:
+java
+session.setAttribute("user", user);
+
+
+*On logout*, the entire session is destroyed immediately:
+java
+session.invalidate();
+
+
+*Post-login redirect* — if a user tries to access a protected page while logged out, AuthenticationFilter saves their intended URL in the session so they are sent there after logging in:
+java
+session.setAttribute("redirectAfterLogin", path);
+// ... after login succeeds:
+session.removeAttribute("redirectAfterLogin");
+response.sendRedirect(contextPath + redirectUrl);
+
+
+### Cookie
+
+One persistent cookie is used — *Remember Me*:
+
+- *Set* on login when the user checks "Remember Me" — stores the email address for 7 days:
+  java
+  Cookie emailCookie = new Cookie("userEmail", email);
+  emailCookie.setMaxAge(7 * 24 * 60 * 60); // 7 days
+  response.addCookie(emailCookie);
+  
+- *Cleared* on logout:
+  java
+  emailCookie.setMaxAge(0); // deletes the cookie
+  
+
+> The cookie stores only the email (not the password) and is used to pre-fill the login form.
+
+### Filters
+
+Two servlet filters secure every request:
+
+*AuthenticationFilter* — Applied to all URLs (/*). Checks for session.getAttribute("user") on every protected path. If not authenticated, redirects to /login.jsp. Public paths (homepage, login, register, CSS, etc.) are whitelisted and pass through freely.
+
+*AdminFilter* — Applied to /admin/*. After authentication passes, casts the session user and checks user.getRole().equals("ADMIN"). Non-admin users are forwarded to the error page with an "Access Denied" message.
+
+---
+
+## Database Schema
+
+
+users        → id, full_name, email, password (SHA-256), phone, role (ADMIN/CUSTOMER)
+buses        → id, bus_number, bus_name, capacity, bus_type, fare_per_seat, status
+routes       → id, source, destination, distance, duration
+schedules    → id, bus_id, route_id, departure_time, arrival_time, travel_date, available_seats
+bookings     → id, user_id, schedule_id, seat_numbers, total_fare, booking_date, status
+
+
+Foreign key relationships:
+- schedules.bus_id → buses.id
+- schedules.route_id → routes.id
+- bookings.user_id → users.id (CASCADE DELETE)
+- bookings.schedule_id → schedules.id (CASCADE DELETE)
+
+---
+
+## Connection Pooling
+
+The application uses *HikariCP* for database connection pooling (configured in DBConnection.java):
+
+- Max pool size: 10 connections
+- Min idle connections: 2
+- Connection timeout: 30 seconds
+- Max connection lifetime: 30 minutes
+
+The pool is pre-warmed at application startup via AppContextListener and cleanly shut down when the application stops.
+
+---
+
+## Troubleshooting
+
+*Port 8080 already in use*
+Change the port in pom.xml:
+xml
+<cargo.servlet.port>9090</cargo.servlet.port>
+
+
+*Database connection failed on startup*
+- Confirm MySQL is running on port 3306
+- Confirm the kalpana_travels database exists and the SQL was imported
+- Check the username/password in src/util/DBConnection.java
+
+*mvn clean package cargo:run fails to download Tomcat*
+- Check internet connectivity — Cargo downloads Tomcat from archive.apache.org on first run
+- If behind a proxy, configure Maven proxy settings in ~/.m2/settings.xml
+
+*404 on all pages after startup*
+- Confirm the context path — the app deploys to /bus, so use http://localhost:8080/bus
+
+---
+
+## Authors
+
+Developed as part of the APL (Advanced Programming Languages) coursework project.
+
+- *Database:* kalpana_travels — Kalpana Travels Bus Company
 
