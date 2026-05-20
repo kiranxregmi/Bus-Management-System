@@ -13,7 +13,7 @@ public class DBConnection {
 
     private static final Logger LOGGER = Logger.getLogger(DBConnection.class.getName());
     
-    private static final String URL = "jdbc:mysql://localhost:3306/kalpana_travels";
+    private static final String URL = "jdbc:mysql://localhost:3307/kalpana_travels";
     private static final String USER = "root";
     private static final String PASSWORD = ""; 
 

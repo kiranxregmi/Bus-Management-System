@@ -20,18 +20,29 @@
         <a href="${pageContext.request.contextPath}/admin/management-center.jsp" class="bg-gray-500 text-white px-4 py-2 rounded">Back</a>
     </div>
 
+    <% if (request.getParameter("success") != null) { %>
+        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 rounded shadow-sm">
+            <%= request.getParameter("success") %>
+        </div>
+    <% } %>
+    <% if (request.getParameter("error") != null) { %>
+        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded shadow-sm">
+            <%= request.getParameter("error") %>
+        </div>
+    <% } %>
+
     <% if ("ADMIN".equals(user.getRole())) { %>
     <div class="bg-white p-6 rounded shadow mb-8">
         <h3 class="text-xl font-bold mb-4">Add New Bus</h3>
         <form action="${pageContext.request.contextPath}/admin/add-bus" method="post" class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
                 <label class="block font-semibold mb-1">Bus Name</label>
-                <select name="busName" required class="w-full border px-3 py-2 rounded">
-                    <option value="">Select Bus</option>
-                    <option value="Kalpana Airbus">Kalpana Airbus</option>
-                    <option value="Syangja Gandaki">Syangja Gandaki</option>
-                    <option value="Syangja Aadhiganga">Syangja Aadhiganga</option>
-                </select>
+                <input list="busNamesList" name="busName" required placeholder="Select or type bus name" class="w-full border px-3 py-2 rounded" />
+                <datalist id="busNamesList">
+                    <option value="Kalpana Airbus">
+                    <option value="Syangja Gandaki">
+                    <option value="Syangja Aadhiganga">
+                </datalist>
             </div>
             <div>
                 <label class="block font-semibold mb-1">Bus Type</label>
