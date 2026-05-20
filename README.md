@@ -79,7 +79,7 @@ Cargo will automatically download Tomcat 10.1 on the first run (requires interne
 Once started, open your browser at:
 
 
-http://localhost:8080/bus
+http://localhost:8082/BusManagementSystem/
 
 
 To stop the server, press Ctrl + C in the terminal.
