@@ -307,7 +307,7 @@ xml
 - If behind a proxy, configure Maven proxy settings in ~/.m2/settings.xml
 
 *404 on all pages after startup*
-- Confirm the context path — the app deploys to /bus, so use http://localhost:8080/bus
+- Confirm the context path — the app deploys to /bus, so use [http://localhost:8080/bus](http://localhost:8082/BusManagementSystem/)
 
 ---
 
