@@ -1,4 +1,5 @@
 <%@ page import="java.io.*, java.sql.*, util.DBConnection" %>
+
 <%
     out.println("<h3>Starting database initialization...</h3>");
     try (Connection conn = DBConnection.getConnection();
